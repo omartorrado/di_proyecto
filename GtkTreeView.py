@@ -31,7 +31,7 @@ class VentanaPrincipal(Gtk.Window):
             modelo.append(persona)
             modelo
 
-        vista=Gtk.TreeView(model=modelo)
+        vista=Gtk.TreeView(model=modelo, enable_search=False)
         for i in range(len(columnas)):
             celda = Gtk.CellRendererText(editable=True)
             columna = Gtk.TreeViewColumn(columnas[i], celda, text=i)
@@ -56,13 +56,13 @@ class VentanaPrincipal(Gtk.Window):
 
 # Aqui tengo que llamar al metodo sql para borrar la fila
     def borrarFila(self,treeview,eventkey):
-        #keyval 65535 es supr
-        if(eventkey.keyval==65535):
+        #keyval 65535 es supr, 65288 es borrar
+        if(eventkey.keyval==65535 or eventkey.keyval==65288):
             #get_selected_rows devuelve una tupla, con el liststore y una lista de las paths de las filas seleccionadas
             seleccion=treeview.get_selection().get_selected_rows()
             for x in seleccion[1]:
                 #Hay que cargar un objeto treeIter sacandolo del ListStore
-                iter=seleccion[0].get_iter(x)
+                iter=treeview.get_model().get_iter(x)
                 #En el modelo llamamo a remove(iter) para eliminar la fila seleccionada
                 treeview.get_model().remove(iter)
 
