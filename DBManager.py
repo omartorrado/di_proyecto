@@ -30,6 +30,9 @@ class DBManager:
             for x in fila:
                 print(x)
 
+    def ejecutar(self,comando):
+        self.conn.execute(comando)
+
 #A los datos de tipo texto hay que ponerle comillas simples ademas de las dobles que se lo ponen a todos los datos
     def insertar(self,nombreTabla,campos):
         comando="insert into "+nombreTabla+" values("
