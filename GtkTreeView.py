@@ -1,6 +1,11 @@
 import gi
+from gi.overrides.Gtk import TreeView
+
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
+import DBManager as dbm
+
+
 
 
 class VentanaPrincipal(Gtk.Window):
@@ -9,27 +14,25 @@ class VentanaPrincipal(Gtk.Window):
         self.set_default_size(400,300)
         self.set_border_width(20)
 
-        columnas =["Nombre","Apellido","Telefono","Fijo","Icono"]
+        #inicializamos la conexion con la bd
+        self.db = dbm.DBManager
+        self.db.__init__(self.db, "database.db")
 
-        agenda=[["Pepe","Perez","986666666",True,"gtk-add"],
-                ["Ana","Alonso","123321123",False,"gtk-cdrom"],
-                ["Oscar","Rodriguez","746936759",False,"gtk-cut"],
-                ["Rosa","Lopez","986123321",True,"gtk-paste"],
-                ["Pepe", "Perez", "986666666", True, "gtk-add"],
-                ["Ana", "Alonso", "123321123", False, "gtk-cdrom"],
-                ["Oscar", "Rodriguez", "746936759", False, "gtk-cut"],
-                ["Rosa", "Lopez", "986123321", True, "gtk-paste"],
-                ["Pepe", "Perez", "986666666", True, "gtk-add"],
-                ["Ana", "Alonso", "123321123", False, "gtk-cdrom"],
-                ["Oscar", "Rodriguez", "746936759", False, "gtk-cut"],
-                ["Rosa", "Lopez", "986123321", True, "gtk-paste"]
-                ]
+#coge los nombres de las columnas de la tabla
+        columnas =self.db.columnas(self.db,"PruebaB")
+#coge los valores de cada fila
+        agenda=self.db.valores(self.db,"PruebaB")
+#coge el tipo de dato de cada columna
+        ct=self.db.columnasTipo(self.db,"PruebaB")
 
-        modelo = Gtk.ListStore(str,str,str,bool,str)
+#No me gusta de este metodo de hacerlo que es necesario pasarle exactamente el numero exacto de columnas al modelo
+        #modelo=Gtk.ListStore(ct[0],ct[1],ct[2],ct[3],ct[4],ct[5])
+#Este metodo si que vale para cualquier tabla
+        modelo =Gtk.ListStore.new(ct)
 
         for persona in agenda:
             modelo.append(persona)
-            modelo
+
 
         vista=Gtk.TreeView(model=modelo, enable_search=False)
         for i in range(len(columnas)):
@@ -61,10 +64,10 @@ class VentanaPrincipal(Gtk.Window):
             #get_selected_rows devuelve una tupla, con el liststore y una lista de las paths de las filas seleccionadas
             seleccion=treeview.get_selection().get_selected_rows()
             #guardamos el modelo en una variable para acceder luego a los valores de la fila seleccionada
-            valorSeleccion=treeview.get_model()
+            modelo=treeview.get_model()
             for x in seleccion[1]:
                 #accededemos al valor (en este caso solo lo imprimo) pasandole la fila seleccionada y la columna que nos interese
-                print(valorSeleccion[x][0])
+                print(modelo[x][0])
                 #Hay que cargar un objeto treeIter sacandolo del ListStore
                 iter=treeview.get_model().get_iter(x)
                 #En el modelo llamamo a remove(iter) para eliminar la fila seleccionada
