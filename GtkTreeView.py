@@ -56,12 +56,15 @@ class VentanaPrincipal(Gtk.Window):
 
 # Aqui tengo que llamar al metodo sql para borrar la fila
     def borrarFila(self,treeview,eventkey):
-        print(eventkey.keyval)
         #keyval 65535 es supr, 65288 es borrar
         if(eventkey.keyval==65535 or eventkey.keyval==65288):
             #get_selected_rows devuelve una tupla, con el liststore y una lista de las paths de las filas seleccionadas
             seleccion=treeview.get_selection().get_selected_rows()
+            #guardamos el modelo en una variable para acceder luego a los valores de la fila seleccionada
+            valorSeleccion=treeview.get_model()
             for x in seleccion[1]:
+                #accededemos al valor (en este caso solo lo imprimo) pasandole la fila seleccionada y la columna que nos interese
+                print(valorSeleccion[x][0])
                 #Hay que cargar un objeto treeIter sacandolo del ListStore
                 iter=treeview.get_model().get_iter(x)
                 #En el modelo llamamo a remove(iter) para eliminar la fila seleccionada
