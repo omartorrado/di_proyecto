@@ -76,13 +76,13 @@ class DBManager:
         return cols
 
 #dependiendo del tipo de columna tiene que devolver un tipo u otro (por ejemplo si es text debe devolver str)
-#TODO faltan tipos de datos por definir
+#TODO faltan tipos de datos por definir, hay que tener cuidado de comprobar mayusculas y minisculas
     def columnasTipo(self,nombreTabla):
         columnTypes=[]
         for x in self.ejecutar(self,"pragma table_info("+nombreTabla+")"):
-            if (x[2] == "text" or x[2]=="string"):
+            if (x[2] == "text" or x[2]=="string" or x[2] == "TEXT"):
                 columnTypes += [str]
-            elif (x[2] == "integer"):
+            elif (x[2] == "integer" or x[2] == "int" or x[2] == "INT"):
                 columnTypes += [int]
             elif (x[2] == "number" or x[2] == "real"):
                 columnTypes += [float]

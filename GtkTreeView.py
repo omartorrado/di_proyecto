@@ -24,6 +24,7 @@ class VentanaPrincipal(Gtk.Window):
 
         listaTabla=self.db.consultarNombreTablas(self.db)
         for x in listaTabla:
+            print(x)
             nombreTabla=x
     #coge los nombres de las columnas de la tabla
             columnas =self.db.columnas(self.db,nombreTabla)
