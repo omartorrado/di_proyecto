@@ -18,36 +18,44 @@ class VentanaPrincipal(Gtk.Window):
         self.db = dbm.DBManager
         self.db.__init__(self.db, "database.db")
 
-#coge los nombres de las columnas de la tabla
-        columnas =self.db.columnas(self.db,"PruebaB")
-#coge los valores de cada fila
-        agenda=self.db.valores(self.db,"PruebaB")
-#coge el tipo de dato de cada columna
-        ct=self.db.columnasTipo(self.db,"PruebaB")
+        #Creamos el notebook que contendra cada tabla y lo añadimos a la ventana
+        notebook = Gtk.Notebook()
+        self.add(notebook)
 
-#No me gusta de este metodo de hacerlo que es necesario pasarle exactamente el numero exacto de columnas al modelo
-        #modelo=Gtk.ListStore(ct[0],ct[1],ct[2],ct[3],ct[4],ct[5])
-#Este metodo si que vale para cualquier tabla
-        modelo =Gtk.ListStore.new(ct)
+        listaTabla=self.db.consultarNombreTablas(self.db)
+        for x in listaTabla:
+            nombreTabla=x
+    #coge los nombres de las columnas de la tabla
+            columnas =self.db.columnas(self.db,nombreTabla)
+    #coge los valores de cada fila
+            agenda=self.db.valores(self.db,nombreTabla)
+    #coge el tipo de dato de cada columna
+            ct=self.db.columnasTipo(self.db,nombreTabla)
 
-        for persona in agenda:
-            modelo.append(persona)
+    #No me gusta de este metodo de hacerlo que es necesario pasarle exactamente el numero exacto de columnas al modelo
+            #modelo=Gtk.ListStore(ct[0],ct[1],ct[2],ct[3],ct[4],ct[5])
+    #Este metodo si que vale para cualquier tabla
+            modelo =Gtk.ListStore.new(ct)
+
+            for persona in agenda:
+                modelo.append(persona)
 
 
-        vista=Gtk.TreeView(model=modelo, enable_search=False)
-        for i in range(len(columnas)):
-            celda = Gtk.CellRendererText(editable=True)
-            columna = Gtk.TreeViewColumn(columnas[i], celda, text=i)
-            #Para poder usar ciertos valores, como la columna o el nombre hay que pasarselos al metodo
-            celda.connect("edited",self.on_celda_edited,modelo,i,columnas[i])
-            vista.append_column(columna)
+            vista=Gtk.TreeView(model=modelo, enable_search=False)
+            for i in range(len(columnas)):
+                celda = Gtk.CellRendererText(editable=True)
+                columna = Gtk.TreeViewColumn(columnas[i], celda, text=i)
+                #Para poder usar ciertos valores, como la columna o el nombre hay que pasarselos al metodo
+                celda.connect("edited",self.on_celda_edited,modelo,i,columnas[i])
+                vista.append_column(columna)
 
-        vista.connect("key_press_event", self.borrarFila)
+            vista.connect("key_press_event", self.borrarFila)
 
-        cajaH= Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        cajaH.pack_start(vista,False,False,0)
+            cajaH= Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            cajaH.pack_start(vista,False,False,0)
 
-        self.add(cajaH)
+            notebook.append_page(cajaH, Gtk.Label(nombreTabla))
+
         self.connect("delete_event",Gtk.main_quit)
         self.show_all()
 

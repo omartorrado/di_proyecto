@@ -55,9 +55,11 @@ class DBManager:
 
 #leer los nombres de todas las tablas de la base de datos
     def consultarNombreTablas(self):
+        nombres=[]
         nombre_tablas = self.ejecutar(self,"select name from sqlite_master where type='table'")
         for x in nombre_tablas:
-            print(x[0])
+            nombres+=[x[0]]
+        return nombres
 
 #leer la informacion de las columnas de una tabla
     def consultarColumnasTabla(self,nombreTabla):
