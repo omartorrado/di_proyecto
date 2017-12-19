@@ -2,6 +2,8 @@ import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
 import DBManager as dbm
+import VisorTablas as visorTablas
+import GestorTabla as gestorTabla
 
 class Login(Gtk.Window):
     def __init__(self):
@@ -70,9 +72,13 @@ class Login(Gtk.Window):
         passw=self.passEntry.get_text()
         comando="select * from usuarios where nombre='"+nombre+"' and password='"+passw+"'"
         print(comando)
-        result=self.db.ejecutar(self.db,comando)
-        if result.fetchone() is not None:
+        result=self.db.ejecutar(self.db,comando).fetchone()
+        if result is not None:
             print("encontrado")
+            if result[2]=="True":
+                visorTablas.VisorTablas()
+            else:
+                gestorTabla.GestorTabla("medicamentos")
         else:
             print("usuario no existe")
 

@@ -6,7 +6,7 @@ import DBManager as dbm
 
 
 
-class VentanaPrincipal(Gtk.Window):
+class VisorTablas(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self,title="Ejemplo de TreeView")
         self.set_default_size(400,300)
@@ -82,5 +82,5 @@ class VentanaPrincipal(Gtk.Window):
 
 
 if __name__=="__main__":
-    VentanaPrincipal()
+    VisorTablas()
     Gtk.main()

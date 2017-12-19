@@ -80,12 +80,14 @@ class DBManager:
     def columnasTipo(self,nombreTabla):
         columnTypes=[]
         for x in self.ejecutar(self,"pragma table_info("+nombreTabla+")"):
-            if (x[2] == "text" or x[2]=="string" or x[2] == "TEXT"):
+            if (x[2] == "text" or x[2] == "TEXT" or x[2]=="string" or x[2]=="STRING"):
                 columnTypes += [str]
-            elif (x[2] == "integer" or x[2] == "int" or x[2] == "INT"):
+            elif (x[2] == "integer" or x[2] == "INTEGER" or x[2] == "int" or x[2] == "INT"):
                 columnTypes += [int]
-            elif (x[2] == "number" or x[2] == "real"):
+            elif (x[2] == "number" or x[2] == "NUMBER" or x[2] == "real" or x[2] == "REAL"):
                 columnTypes += [float]
+            elif (x[2]== "BOOLEAN" or x[2] == "boolean"):
+                columnTypes += [bool]
             else:
                 columnTypes += [None]
         return columnTypes
