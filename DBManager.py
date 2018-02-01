@@ -49,6 +49,9 @@ class DBManager:
         self.conn.execute(comando)
         self.conn.commit()
 
+#Necesito un metodo para los updates
+
+
 #METODOS GENERICOS
 
 #Estos metodos los voy a usar para generar el modelo del treeview

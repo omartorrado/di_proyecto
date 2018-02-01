@@ -59,10 +59,17 @@ class VisorTablas(Gtk.Window):
         self.show_all()
 
 # Metodo que se lanza cuando se ha editado una celda
-    #Aqui tengo k llamar al metodo sql para actualizar los valores
     def on_celda_edited(self,celda,fila,texto,modelo,columna,nombreColumna):
-        modelo[fila][columna]= texto
+        #self.db.consultarColumnasTabla(self.db,"medicamentos")
+        print(fila, ",", columna, ",", texto, nombreColumna)
+        #Tengo k diferenciar los tipos, cargo todos los de la tabla que sea
+        ct = self.db.columnasTipo(self.db, "medicamentos")
+        #ct[columna] me da el tipo de la columna
+        print("CT: "+str(ct[columna]))
+        #casteo el texto al tipo requerido para cargarlo en el modelo
+        modelo[fila][columna]= ct[columna](texto)
         print(fila,",",columna,",",texto,nombreColumna)
+        #A continuacion tengo que actualizar la base de datos
 
 # Aqui tengo que llamar al metodo sql para borrar la fila
     def borrarFila(self,treeview,eventkey):
