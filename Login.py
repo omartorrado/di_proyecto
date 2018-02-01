@@ -76,8 +76,11 @@ class Login(Gtk.Window):
         if result is not None:
             print("encontrado")
             if result[2]=="True":
+                #Visor tabla abre en modo administrador
                 visorTablas.VisorTablas()
+                self.hide()
             else:
+                #gestorTabla deberia ser el modo de usuario
                 gestorTabla.GestorTabla("medicamentos")
         else:
             print("usuario no existe")

@@ -16,9 +16,14 @@ class VisorTablas(Gtk.Window):
         self.db = dbm.DBManager
         self.db.__init__(self.db, "database.db")
 
+        #creamos un box como layout principal
+        box=Gtk.Box()
+        box.set_orientation(Gtk.Orientation.VERTICAL)
+        box.set_halign(Gtk.Align.CENTER)
+
         #Creamos el notebook que contendra cada tabla y lo añadimos a la ventana
         notebook = Gtk.Notebook()
-        self.add(notebook)
+        box.add(notebook)
 
         listaTabla=self.db.consultarNombreTablas(self.db)
         for x in listaTabla:
@@ -55,6 +60,7 @@ class VisorTablas(Gtk.Window):
 
             notebook.append_page(cajaH, Gtk.Label(nombreTabla))
 
+        self.add(box)
         self.connect("delete_event",Gtk.main_quit)
         self.show_all()
 
