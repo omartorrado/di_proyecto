@@ -82,6 +82,7 @@ class Login(Gtk.Window):
             else:
                 #gestorTabla deberia ser el modo de usuario
                 gestorTabla.GestorTabla("medicamentos")
+                self.hide()
         else:
             print("usuario no existe")
 

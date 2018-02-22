@@ -1,4 +1,7 @@
 import gi
+
+import Login
+
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
 import DBManager as dbm
@@ -60,6 +63,16 @@ class VisorTablas(Gtk.Window):
 
             notebook.append_page(cajaH, Gtk.Label(nombreTabla))
 
+        #añado botones salir/volver al login
+        boton_volver=Gtk.Button("Volver")
+        boton_salir=Gtk.Button("Salir")
+
+        boton_volver.connect("clicked",self.volver)
+        boton_salir.connect("clicked",Gtk.main_quit)
+
+        box.add(boton_volver)
+        box.add(boton_salir)
+
         self.add(box)
         self.connect("delete_event",Gtk.main_quit)
         self.show_all()
@@ -96,6 +109,10 @@ class VisorTablas(Gtk.Window):
                 #En el modelo llamamo a remove(iter) para eliminar la fila seleccionada
                 treeview.get_model().remove(iter)
 
+    #botones
+    def volver(self,boton):
+        self.hide()
+        Login.Login()
 
 if __name__=="__main__":
     VisorTablas()
