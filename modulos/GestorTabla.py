@@ -1,7 +1,8 @@
 import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
-import DBManager as dbm
+from modulos import DBManager as dbm
+
 
 class GestorTabla (Gtk.Window):
     def __init__(self,nombreTabla):
@@ -10,7 +11,7 @@ class GestorTabla (Gtk.Window):
         self.set_border_width(20)
 
         self.db = dbm.DBManager
-        self.db.__init__(self.db, "database.db")
+        self.db.__init__(self.db, "database/database.db")
 
         # coge los nombres de las columnas de la tabla
         columnas = self.db.columnas(self.db, nombreTabla)

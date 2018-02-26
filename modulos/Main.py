@@ -1,7 +1,8 @@
-import DBManager as dbm
+from modulos import DBManager as dbm
+
 #ESTA CLASE ES DE PRUEBAS, EL PROYECTO NO LA USA
 db=dbm.DBManager
-db.__init__(db,"database.db")
+db.__init__(db,"database/database.db")
 #db.crearTabla(db,"PruebaB",["a","b","c","d","Paco","k"],["text","text","integer","number","string","real"])
 #db.insertar(db,"PruebaB",["'hola'","'que'","2","3","'tal'","1.9"])
 #db.consultar(db,"PruebaB",["a","b","c","d","Paco","k"])

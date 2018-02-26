@@ -1,12 +1,9 @@
+from modulos import Login
 import gi
-
-import Login
 
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
-import DBManager as dbm
-
-
+from modulos import DBManager as dbm
 
 
 class VisorTablas(Gtk.Window):
@@ -17,7 +14,7 @@ class VisorTablas(Gtk.Window):
 
         #inicializamos la conexion con la bd
         self.db = dbm.DBManager
-        self.db.__init__(self.db, "database.db")
+        self.db.__init__(self.db, "database/database.db")
 
         #creamos un box como layout principal
         box=Gtk.Box()

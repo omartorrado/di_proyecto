@@ -1,9 +1,9 @@
 import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
-import DBManager as dbm
-import VisorTablas as visorTablas
-import GestorTabla as gestorTabla
+from modulos import DBManager as dbm
+from modulos import GestorTabla,VisorTablas
+
 
 class Login(Gtk.Window):
     def __init__(self):
@@ -13,7 +13,7 @@ class Login(Gtk.Window):
 
         # inicializamos la conexion con la bd
         self.db = dbm.DBManager
-        self.db.__init__(self.db, "database.db")
+        self.db.__init__(self.db, "database/database.db")
 
         box=Gtk.Box()
         box.set_orientation(Gtk.Orientation.VERTICAL)
@@ -42,7 +42,7 @@ class Login(Gtk.Window):
         box3.add(passLabel)
         box3.add(self.passEntry)
 
-        portada=Gtk.Image().new_from_file("logo.jpg")
+        portada=Gtk.Image().new_from_file("ficheros/logo.jpg")
         box2.add(portada)
 
         loginButton=Gtk.Button("Log in")
@@ -77,11 +77,11 @@ class Login(Gtk.Window):
             print("encontrado")
             if result[2]=="True":
                 #Visor tabla abre en modo administrador
-                visorTablas.VisorTablas()
+                VisorTablas.VisorTablas()
                 self.hide()
             else:
                 #gestorTabla deberia ser el modo de usuario
-                gestorTabla.GestorTabla("medicamentos")
+                GestorTabla.GestorTabla("medicamentos")
                 self.hide()
         else:
             print("usuario no existe")
