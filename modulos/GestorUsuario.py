@@ -2,15 +2,11 @@ import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
 from modulos import DBManager as dbm
-from modulos import VisorTablas
 
-class GestorTabla (Gtk.Window):
+
+class GestorUsuario (Gtk.Window):
     db = dbm.DBManager
-    selfWindow=""
     def __init__(self,nombreTabla):
-
-        self.selfWindow=self
-
         Gtk.Window.__init__(self, title=nombreTabla)
         self.set_default_size(400, 300)
         self.set_border_width(20)
@@ -39,34 +35,7 @@ class GestorTabla (Gtk.Window):
             grid.attach(entry,1,filaInterfaz,1,1)
             filaInterfaz+=1
 
-        #este es el metodo para insertgar en la tabla
-        def insertarDatos(self,selfWindow):
-            valores = []
-            contador=0
-            for col in grid:
-                print(col)
-                if(contador%2==0):
-                    texto=col.get_text()
-                    valores.insert(0,texto)
-                contador += 1
-            print(valores)
-            GestorTabla.db.insertar(GestorTabla.db,nombreTabla,valores)
-            VisorTablas.VisorTablas()
-            selfWindow.hide()
-
-
-
-        #creamos el boton confirmar
-        boton=Gtk.Button("Confirmar")
-        boton.connect("clicked",insertarDatos,self.selfWindow)
-
-        box=Gtk.Box()
-        box.set_orientation(Gtk.Orientation.VERTICAL)
-        box.set_halign(Gtk.Align.CENTER)
-
-        box.add(grid)
-        box.add(boton)
-        self.add(box)
+        self.add(grid)
         #self.connect("delete_event", Gtk.main_quit)
         self.show_all()
 
@@ -77,5 +46,5 @@ class GestorTabla (Gtk.Window):
 
 
 if __name__=="__main__":
-    GestorTabla()
+    GestorUsuario()
     Gtk.main()

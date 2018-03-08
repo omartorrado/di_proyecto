@@ -4,13 +4,14 @@ import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
 from modulos import DBManager as dbm
-
+from modulos import GestorTabla
 
 class VisorTablas(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self,title="Ejemplo de TreeView")
         self.set_default_size(400,300)
         self.set_border_width(20)
+        self.set_position(Gtk.WindowPosition.CENTER)
 
         #inicializamos la conexion con la bd
         self.db = dbm.DBManager
@@ -50,13 +51,19 @@ class VisorTablas(Gtk.Window):
                 celda = Gtk.CellRendererText(editable=True)
                 columna = Gtk.TreeViewColumn(columnas[i], celda, text=i)
                 #Para poder usar ciertos valores, como la columna o el nombre hay que pasarselos al metodo
-                celda.connect("edited",self.on_celda_edited,modelo,i,columnas[i])
+                celda.connect("edited",self.on_celda_edited,modelo,i,columnas[i],nombreTabla)
                 vista.append_column(columna)
 
-            vista.connect("key_press_event", self.borrarFila)
+            vista.connect("key_press_event", self.borrarFila,nombreTabla)
 
             cajaH= Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             cajaH.pack_start(vista,False,False,0)
+
+            # boton insertar
+            boton_insertar = Gtk.Button("nueva fila")
+            boton_insertar.connect("clicked", self.insertar, nombreTabla)
+
+            cajaH.add(boton_insertar)
 
             notebook.append_page(cajaH, Gtk.Label(nombreTabla))
 
@@ -75,11 +82,12 @@ class VisorTablas(Gtk.Window):
         self.show_all()
 
 # Metodo que se lanza cuando se ha editado una celda
-    def on_celda_edited(self,celda,fila,texto,modelo,columna,nombreColumna):
+    def on_celda_edited(self,celda,fila,texto,modelo,columna,nombreColumna,nombreTabla):
         #self.db.consultarColumnasTabla(self.db,"medicamentos")
-        print(fila, ",", columna, ",", nombreColumna, texto)
+        print(fila, ",", columna, ",", nombreColumna, texto, nombreTabla)
         #Tengo k diferenciar los tipos, cargo todos los de la tabla que sea
-        ct = self.db.columnasTipo(self.db, "medicamentos")
+        ct = self.db.columnasTipo(self.db, nombreTabla)
+        print(ct)
         #ct[columna] me da el tipo de la columna
         print("CT: "+str(ct[columna]))
         #casteo el texto al tipo requerido para cargarlo en el modelo
@@ -91,7 +99,7 @@ class VisorTablas(Gtk.Window):
         #A continuacion tengo que actualizar la base de datos (o crear otro metodo para que guarde los cambios)
 
 # Aqui tengo que llamar al metodo sql para borrar la fila
-    def borrarFila(self,treeview,eventkey):
+    def borrarFila(self,treeview,eventkey,nombreTabla):
         #keyval 65535 es supr, 65288 es borrar
         if(eventkey.keyval==65535 or eventkey.keyval==65288):
             #get_selected_rows devuelve una tupla, con el liststore y una lista de las paths de las filas seleccionadas
@@ -99,17 +107,32 @@ class VisorTablas(Gtk.Window):
             #guardamos el modelo en una variable para acceder luego a los valores de la fila seleccionada
             modelo=treeview.get_model()
             for x in seleccion[1]:
-                #accededemos al valor (en este caso solo lo imprimo) pasandole la fila seleccionada y la columna que nos interese
-                print(modelo[x][0])
+                #hago un for desde la columna 0 a la ultima columna de la base de datos en la que estemos
+                for i in range(len(treeview.get_columns())):
+                    #esto me da el nombre de las columnas
+                    print(i,treeview.get_column(i).get_title())
+                    # accededemos al valor (en este caso solo lo imprimo) pasandole la fila seleccionada y la columna que nos interese
+                    print(x,i,modelo[x][i])
                 #Hay que cargar un objeto treeIter sacandolo del ListStore
                 iter=treeview.get_model().get_iter(x)
-                #En el modelo llamamo a remove(iter) para eliminar la fila seleccionada
-                treeview.get_model().remove(iter)
 
+                #AQUI EJECUTO EL SQL
+                print("Borrando",nombreTabla,treeview.get_column(0).get_title(),modelo[x][0])
+                self.db.borrar(self.db,nombreTabla,treeview.get_column(0).get_title(),str(modelo[x][0]))
+                #POR ULTIMO BORRO LA FILA DEL MODELO
+                # En el modelo llamamo a remove(iter) para eliminar la fila seleccionada
+                treeview.get_model().remove(iter)
     #botones
     def volver(self,boton):
         self.hide()
         Login.Login()
+
+    def insertar(self,boton,nombreTabla):
+        print("hola",nombreTabla)
+        self.hide()
+        GestorTabla.GestorTabla(nombreTabla)
+
+
 
 if __name__=="__main__":
     VisorTablas()

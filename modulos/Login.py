@@ -2,7 +2,7 @@ import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
 from modulos import DBManager as dbm
-from modulos import GestorTabla,VisorTablas
+from modulos import VisorTablas,GestorUsuario
 
 
 class Login(Gtk.Window):
@@ -10,6 +10,7 @@ class Login(Gtk.Window):
         Gtk.Window.__init__(self, title="Gestor de farmacia")
         self.set_default_size(400, 300)
         self.set_border_width(20)
+        self.set_position(Gtk.WindowPosition.CENTER)
 
         # inicializamos la conexion con la bd
         self.db = dbm.DBManager
@@ -81,7 +82,7 @@ class Login(Gtk.Window):
                 self.hide()
             else:
                 #gestorTabla deberia ser el modo de usuario
-                GestorTabla.GestorTabla("medicamentos")
+                GestorUsuario.GestorUsuario("prescripciones")
                 self.hide()
         else:
             print("usuario no existe")

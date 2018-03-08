@@ -33,18 +33,21 @@ class DBManager:
     def ejecutar(self,comando):
         return self.conn.execute(comando)
 
+#Asi solo vale para numeros, sino tendria que tener comillas alrededor de keyValue
     def borrar(self,nombreTabla,keyName,keyValue):
-        comando="delete from "+nombreTabla+" where "+keyName+"='"+keyValue+"'"
-        self.ejecutar(comando)
+        comando="delete from "+nombreTabla+" where "+keyName+"="+keyValue+""
+        print(comando)
+        self.conn.execute(comando)
+        self.conn.commit()
 
 #A los datos de tipo texto hay que ponerle comillas simples ademas de las dobles que se lo ponen a todos los datos
     def insertar(self,nombreTabla,campos):
-        comando="insert into "+nombreTabla+" values("
+        comando="insert into "+nombreTabla+" values('"
         for campo in range(len(campos)):
             if(campo<len(campos)-1):
-                comando+=campos[campo]+","
+                comando+=campos[campo]+"','"
             else:
-                comando+=campos[campo]+")"
+                comando+=campos[campo]+"')"
         print(comando)
         self.conn.execute(comando)
         self.conn.commit()
