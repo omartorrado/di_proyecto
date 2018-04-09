@@ -4,6 +4,10 @@ from gi.repository import Gtk
 from modulos import DBManager as dbm
 from modulos import VisorTablas
 
+"""
+    - Esta clase crea una ventana a partir de la tabla seleccionada en VisorTabla,
+    con los campos de dicha tabla, para poder añadir una nueva fila. 
+"""
 class GestorTabla (Gtk.Window):
     db = dbm.DBManager
     selfWindow=""
@@ -39,17 +43,20 @@ class GestorTabla (Gtk.Window):
             grid.attach(entry,1,filaInterfaz,1,1)
             filaInterfaz+=1
 
+        """
+            - Metodo para añadir la nueva fila a la tabla y a la bd
+        """
         #este es el metodo para insertgar en la tabla
         def insertarDatos(self,selfWindow):
             valores = []
             contador=0
             for col in grid:
-                print(col)
+                #print(col)
                 if(contador%2==0):
                     texto=col.get_text()
                     valores.insert(0,texto)
                 contador += 1
-            print(valores)
+            #print(valores)
             GestorTabla.db.insertar(GestorTabla.db,nombreTabla,valores)
             VisorTablas.VisorTablas()
             selfWindow.hide()
@@ -67,7 +74,7 @@ class GestorTabla (Gtk.Window):
         box.add(grid)
         box.add(boton)
         self.add(box)
-        #self.connect("delete_event", Gtk.main_quit)
+        self.connect("delete_event", Gtk.main_quit)
         self.show_all()
 
         print(columnas)

@@ -1,13 +1,13 @@
-from distutils.core import setup
+#from distutils.core import setup
 #no puedo instalar setuptools por permisos
-#from setuptools import setup
+from setuptools import setup
 
 asterisco = ["*"]
 
 
 setup(
     name = "Proyecto Farmacia DI",
-    version = "0.3",
+    version = "1.0",
     description = "Interfaz de gestión de una farmacia",
     long_description = """Interfaz de usuario y conexion con base de datos para la
         gestión de una farmacia""",

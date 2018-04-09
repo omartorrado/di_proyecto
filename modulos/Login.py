@@ -1,10 +1,15 @@
+#coding=utf-8
 import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk
 from modulos import DBManager as dbm
-from modulos import VisorTablas,GestorUsuario
+from modulos import VisorTablas, GestorUsuario
 
-
+"""
+ - Clase principal. Desde aqui se realiza el login, pudiendo acceder 
+    como admin o como user dependiendo de los privilegios que tenga 
+    dicho usuario.
+"""
 class Login(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Gestor de farmacia")
@@ -22,6 +27,7 @@ class Login(Gtk.Window):
         box2=Gtk.Box()
         box2.set_halign(Gtk.Align.CENTER)
         box2.set_margin_bottom(50)
+        box2.set_orientation(Gtk.Orientation.VERTICAL)
         box3=Gtk.Box()
         box3.set_margin_bottom(20)
         box3.set_halign(Gtk.Align.CENTER)
@@ -45,6 +51,8 @@ class Login(Gtk.Window):
 
         portada=Gtk.Image().new_from_file("ficheros/logo.jpg")
         box2.add(portada)
+        self.informacion=Gtk.Label("")
+        box2.add(self.informacion)
 
         loginButton=Gtk.Button("Log in")
         loginButton.set_size_request(100,30)
@@ -68,6 +76,11 @@ class Login(Gtk.Window):
         self.add(box)
         self.show_all()
 
+    """
+        -Este metodo comprueba que el usuario y contraseña se encuentren en la bd
+        y dependiendo de sus privilegios de acceso, abre la ventana de admin o la
+        de usuario
+    """
     def checkLogin(self,boton):
         nombre=self.userEntry.get_text()
         passw=self.passEntry.get_text()
@@ -75,6 +88,7 @@ class Login(Gtk.Window):
         print(comando)
         result=self.db.ejecutar(self.db,comando).fetchone()
         if result is not None:
+            self.informacion.set_text("")
             print("encontrado")
             if result[2]=="True":
                 #Visor tabla abre en modo administrador
@@ -82,10 +96,15 @@ class Login(Gtk.Window):
                 self.hide()
             else:
                 #gestorTabla deberia ser el modo de usuario
-                GestorUsuario.GestorUsuario("prescripciones")
+                GestorUsuario.GestorUsuario("prescripciones",nombre)
                 self.hide()
         else:
             print("usuario no existe")
+            self.userEntry.set_text("")
+            self.passEntry.set_text("")
+            self.informacion.set_text("El usuario no existe o la contraseña no es correcta")
+
+
 
 if __name__ == '__main__':
     Login()
